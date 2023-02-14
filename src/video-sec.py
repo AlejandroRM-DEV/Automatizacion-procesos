@@ -19,12 +19,23 @@ def generate_image_sequence(video_path, image_interval):
     if not os.path.exists(image_directory):
         os.makedirs(image_directory)
 
+    if image_interval >= 1:
+        time_per_image = image_interval
+    elif image_interval > 0:
+        images_per_second = 1 / image_interval
+        time_per_image = 1 / images_per_second
+    else:
+        raise ValueError("Invalid image interval. Must be greater than 0.")
+
+    time_elapsed = 0
     while success:
-        if image_counter % (fps * image_interval) == 0:
+        if time_elapsed >= time_per_image:
             image_name = f"{image_directory}/frame_{image_counter}.jpg"
             cv2.imwrite(image_name, frame)
+            time_elapsed = 0
         success, frame = cap.read()
         image_counter += 1
+        time_elapsed += 1 / fps
 
     cap.release()
 
