@@ -1,6 +1,7 @@
 import os
 import cv2
 import glob
+import argparse
 import concurrent.futures
 from tqdm import tqdm
 
@@ -13,7 +14,8 @@ def generate_image_sequence(video_path, image_interval):
     success, frame = cap.read()
 
     video_file_name = os.path.splitext(os.path.basename(video_path))[0]
-    image_directory = os.path.join(os.path.dirname(video_path), video_file_name)
+    image_directory = os.path.join(
+        os.path.dirname(video_path), video_file_name)
     if not os.path.exists(image_directory):
         os.makedirs(image_directory)
 
@@ -31,24 +33,33 @@ def process_video(video_file, image_interval):
     generate_image_sequence(video_file, image_interval)
 
 
-def list_files():
+def list_files(current_dir):
     video_files = []
-    current_dir = "."
     for extension in [".mp4", ".avi", ".mov", ".dav"]:
-        video_files.extend(glob.glob(f"{current_dir}/**/*{extension}", recursive=True))
+        video_files.extend(
+            glob.glob(f"{current_dir}/**/*{extension}", recursive=True))
 
     return video_files
 
 
-video_files = list_files()
-
-if len(video_files) == 0:
-    print("No se encontraron archivos de video")
-else:
-    image_interval = float(input("Introduce cada cuántos segundos quieres una imagen: "))
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        results = [executor.submit(process_video, video_file, image_interval) for video_file in video_files]
-        for _ in tqdm(concurrent.futures.as_completed(results), total=len(results), desc="Procesando videos"):
-            pass
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--dir", help="Directorio donde buscar los archivos", default=".")
+    args = parser.parse_args()
     
-    print("Fin")
+    print(f"Directorio: {args.dir}")
+    video_files = list_files(args.dir)
+    
+    if len(video_files) == 0:
+        print("No se encontraron archivos de video")
+    else:
+        image_interval = float(
+            input("Introduce cada cuántos segundos quieres una imagen: "))
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            results = [executor.submit(
+                process_video, video_file, image_interval) for video_file in video_files]
+            for _ in tqdm(concurrent.futures.as_completed(results), total=len(results), desc="Procesando videos"):
+                pass
+
+    print("Presiona una tecla para terminar...")
+    input()
