@@ -25,7 +25,7 @@ def generate_image_sequence(video_path, image_interval):
         images_per_second = 1 / image_interval
         time_per_image = 1 / images_per_second
     else:
-        raise ValueError("Invalid image interval. Must be greater than 0.")
+        raise ValueError("Sólo números mayores a 0")
 
     time_elapsed = 0
     while success:
