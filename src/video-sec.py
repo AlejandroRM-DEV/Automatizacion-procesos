@@ -5,8 +5,11 @@ import argparse
 import concurrent.futures
 from tqdm import tqdm
 
+EXTENSIONS = [".3g2", ".3gp", ".asf", ".avi", ".dav", ".divx", ".f4v", ".flv", ".h264", ".m2t", ".m2ts", ".m2v", ".mkv", ".m4v", ".mov", ".mp4",
+              ".mpg", ".mpg2", ".mpg4", ".mpeg", ".nut", ".ogm", ".ogv", ".rm", ".rmvb", ".tod", ".tp", ".trp", ".ts", ".vob", ".webm", ".wmv", ".xvid"]
 
-def generate_image_sequence(video_path, image_interval):
+
+def generate_image_sequence(root_directory, video_path, image_interval):
     cap = cv2.VideoCapture(video_path)
     fps = int(cap.get(cv2.CAP_PROP_FPS))
 
@@ -14,8 +17,7 @@ def generate_image_sequence(video_path, image_interval):
     success, frame = cap.read()
 
     video_file_name = os.path.splitext(os.path.basename(video_path))[0]
-    image_directory = os.path.join(
-        os.path.dirname(video_path), video_file_name)
+    image_directory = os.path.join(root_directory, video_file_name)
     if not os.path.exists(image_directory):
         os.makedirs(image_directory)
 
@@ -40,15 +42,14 @@ def generate_image_sequence(video_path, image_interval):
     cap.release()
 
 
-def process_video(video_file, image_interval):
-    generate_image_sequence(video_file, image_interval)
+def process_video(root_directory, video_file, image_interval):
+    generate_image_sequence(root_directory, video_file, image_interval)
 
 
-def list_files(current_dir):
+def search_files(current_dir):
     video_files = []
-    for extension in [".mp4", ".avi", ".mov", ".dav"]:
-        video_files.extend(
-            glob.glob(f"{current_dir}/**/*{extension}", recursive=True))
+    for extension in EXTENSIONS:
+        video_files.extend(glob.glob(f"{current_dir}/**/*{extension}", recursive=True))
 
     return video_files
 
@@ -57,18 +58,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dir", help="Directorio donde buscar los archivos", default=".")
     args = parser.parse_args()
-    
-    print(f"Directorio: {args.dir}")
-    video_files = list_files(args.dir)
-    
+
+    print(f"Buscando archivos de video en: {args.dir}")
+    video_files = search_files(args.dir)
+
     if len(video_files) == 0:
         print("No se encontraron archivos de video")
     else:
+        root_directory = os.path.join(os.path.dirname(args.dir), "[AUTO-IMG-SEC]")
+        if not os.path.exists(root_directory):
+            os.makedirs(root_directory)
+
         image_interval = float(
             input("Introduce cada cuántos segundos quieres una imagen: "))
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = [executor.submit(
-                process_video, video_file, image_interval) for video_file in video_files]
+            results = [executor.submit(process_video, root_directory, video_file, image_interval) for video_file in video_files]
             for _ in tqdm(concurrent.futures.as_completed(results), total=len(results), desc="Procesando videos"):
                 pass
 
