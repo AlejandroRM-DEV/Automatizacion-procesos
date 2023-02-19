@@ -8,3 +8,6 @@ El script utiliza la biblioteca OpenCV para abrir archivos de video y extraer im
 Para procesar los archivos de video en paralelo, se utiliza la biblioteca concurrent.futures y el código está diseñado para mostrar una barra de progreso utilizando la biblioteca tqdm.
 
 La secuencia de imágenes resultante se guarda en un directorio con el mismo nombre que el archivo de video, y cada imagen se nombra como "frame_X.jpg", donde X es el número de imagen.
+
+## hashes.py
+Este script genera hashes SHA256 para los archivos encontrados en un directorio y su subdirectorio y los guarda en un archivo HTML. El script utiliza la biblioteca hashlib para calcular los hashes SHA256 de los archivos, os para buscar archivos en el directorio y subdirectorios, argparse para analizar argumentos de línea de comando y tqdm para mostrar una barra de progreso mientras se generan los hashes.

@@ -9,7 +9,7 @@ EXTENSIONS = [".3g2", ".3gp", ".asf", ".avi", ".dav", ".divx", ".f4v", ".flv", "
               ".mpg", ".mpg2", ".mpg4", ".mpeg", ".nut", ".ogm", ".ogv", ".rm", ".rmvb", ".tod", ".tp", ".trp", ".ts", ".vob", ".webm", ".wmv", ".xvid"]
 
 
-def generate_image_sequence(root_directory, video_path, image_interval):
+def generate_image_sequence(dest_directory, video_path, image_interval):
     cap = cv2.VideoCapture(video_path)
     fps = int(cap.get(cv2.CAP_PROP_FPS))
 
@@ -17,7 +17,7 @@ def generate_image_sequence(root_directory, video_path, image_interval):
     success, frame = cap.read()
 
     video_file_name = os.path.splitext(os.path.basename(video_path))[0]
-    image_directory = os.path.join(root_directory, video_file_name)
+    image_directory = os.path.join(dest_directory, video_file_name)
     if not os.path.exists(image_directory):
         os.makedirs(image_directory)
 
@@ -42,8 +42,8 @@ def generate_image_sequence(root_directory, video_path, image_interval):
     cap.release()
 
 
-def process_video(root_directory, video_file, image_interval):
-    generate_image_sequence(root_directory, video_file, image_interval)
+def process_video(dest_directory, video_file, image_interval):
+    generate_image_sequence(dest_directory, video_file, image_interval)
 
 
 def search_files(current_dir):
@@ -65,14 +65,14 @@ if __name__ == "__main__":
     if len(video_files) == 0:
         print("No se encontraron archivos de video")
     else:
-        root_directory = os.path.join(os.path.dirname(args.dir), "[AUTO-IMG-SEC]")
-        if not os.path.exists(root_directory):
-            os.makedirs(root_directory)
+        dest_directory = os.path.join(os.path.dirname(args.dir), "[AUTO-IMG-SEC]")
+        if not os.path.exists(dest_directory):
+            os.makedirs(dest_directory)
 
         image_interval = float(
             input("Introduce cada cuántos segundos quieres una imagen: "))
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = [executor.submit(process_video, root_directory, video_file, image_interval) for video_file in video_files]
+            results = [executor.submit(process_video, dest_directory, video_file, image_interval) for video_file in video_files]
             for _ in tqdm(concurrent.futures.as_completed(results), total=len(results), desc="Procesando videos"):
                 pass
 
