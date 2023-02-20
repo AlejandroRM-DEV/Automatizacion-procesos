@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+\[HASHES\]/
+\[AUTO-IMG-SEC\]/
+\[DOCS\]/

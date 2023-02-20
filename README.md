@@ -11,3 +11,6 @@ La secuencia de imágenes resultante se guarda en un directorio con el mismo nom
 
 ## hashes.py
 Este script genera hashes SHA256 para los archivos encontrados en un directorio y su subdirectorio y los guarda en un archivo HTML. El script utiliza la biblioteca hashlib para calcular los hashes SHA256 de los archivos, os para buscar archivos en el directorio y subdirectorios, argparse para analizar argumentos de línea de comando y tqdm para mostrar una barra de progreso mientras se generan los hashes.
+
+## images-in-doc.py
+Utiliza varios módulos de Python para buscar imágenes en un directorio, insertarlas en un documento de Word y guardar el documento en una carpeta de destino. Además, utiliza argumentos de línea de comandos para permitir que el usuario especifique el directorio de búsqueda y el número de columnas del documento.
