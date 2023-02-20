@@ -131,3 +131,5 @@ dmypy.json
 \[HASHES\]/
 \[AUTO-IMG-SEC\]/
 \[DOCS\]/
+src/protected/*
+src/sprotected/***
