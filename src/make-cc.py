@@ -23,7 +23,7 @@ def get_evidence_table(doc):
         if table.rows[0].cells[0].text == "INDICIO":
             for row in table.rows[1:]:
                 for cell in row.cells:
-                    content += cell.text + "\t"
+                    content += cell.text + " "
                 content += "\r\n"
 
     return content.rstrip()
@@ -66,15 +66,16 @@ def write_chain_of_custody(dest_directory):
     path_cc = os.path.abspath(f"{script_dir}/protected/templates/cc.xlsx")
     workbook = openpyxl.load_workbook(path_cc)
 
-    hoja = workbook['Hoja1']
-    hoja['B1'] = data["no_response"]
-    hoja['B2'] = data["evidence_table"]
-    hoja['B3'] = data["agency"]
-    hoja['B4'] = data["prosecutor"]
-    hoja['B5'] = data["ci"]
-    hoja['B6'] = data["type"]
+    hoja = workbook['FORMATO']
+    hoja['H45'] = data["evidence_table"]
+    hoja['F45'] = data["evidence_table"].count("Número de serie de volumen")
+    hoja['K9'] = data["agency"]
+    hoja['V9'] = data["prosecutor"]
+    hoja['AA6'] = data["ci"]
+    hoja['F12'] = data["type"]
 
-    workbook.save(os.path.abspath(f"./{dest_directory}/cc.xlsx"))
+    workbook.save(os.path.abspath(f"{dest_directory}/cc.xlsx"))
+    os.startfile(os.path.abspath(f"{dest_directory}/cc.xlsx"))
 
 
 def write_envelope(dest_directory):
@@ -83,14 +84,13 @@ def write_envelope(dest_directory):
     workbook = openpyxl.load_workbook(path_cc)
 
     hoja = workbook['Hoja1']
-    hoja['B1'] = data["no_response"]
-    hoja['B2'] = data["evidence_table"]
-    hoja['B3'] = data["agency"]
-    hoja['B4'] = data["prosecutor"]
-    hoja['B5'] = data["ci"]
-    hoja['B6'] = data["type"]
+    hoja['D16'] = data["no_response"]
+    hoja['C26'] = data["evidence_table"]
+    hoja['D22'] = data["agency"]
+    hoja['D18'] = data["ci"]
 
-    workbook.save(os.path.abspath(f"./{dest_directory}/sobre.xlsx"))
+    workbook.save(os.path.abspath(f"{dest_directory}/sobre.xlsx"))
+    os.startfile(os.path.abspath(f"{dest_directory}/sobre.xlsx"))
 
 
 if __name__ == "__main__":
