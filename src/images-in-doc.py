@@ -17,7 +17,7 @@ def make_document(dest_directory, files, columns):
             doc, image_descriptor=os.path.abspath(file), width=Cm(16/int(columns))))
 
     doc.render(datos)
-    doc.save(os.path.abspath(f"./{dest_directory}/imgs.docx"))
+    doc.save(os.path.abspath(f"{dest_directory}/imgs.docx"))
 
 
 def search_files(dir):
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     if len(files) == 0:
         print("No se encontraron archivos")
     else:
-        dest_directory = os.path.join(os.path.dirname(args.dir), "[DOCS]")
+        dest_directory = os.path.join(os.path.dirname(args.dir), "_DOCS_")
         if not os.path.exists(dest_directory):
             os.makedirs(dest_directory)
 

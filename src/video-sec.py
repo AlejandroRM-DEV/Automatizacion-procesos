@@ -65,7 +65,7 @@ if __name__ == "__main__":
     if len(video_files) == 0:
         print("No se encontraron archivos de video")
     else:
-        dest_directory = os.path.join(os.path.dirname(args.dir), "[AUTO-IMG-SEC]")
+        dest_directory = os.path.join(os.path.dirname(args.dir), "_AUTO-IMG-SEC_")
         if not os.path.exists(dest_directory):
             os.makedirs(dest_directory)
 

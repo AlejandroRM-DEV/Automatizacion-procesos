@@ -81,7 +81,7 @@ if __name__ == "__main__":
     if len(files) == 0:
         print("No se encontraron archivos")
     else:
-        dest_directory = os.path.join(os.path.dirname(args.dir), "[HASHES]")
+        dest_directory = os.path.join(os.path.dirname(args.dir), "_HASHES_")
         if not os.path.exists(dest_directory):
             os.makedirs(dest_directory)
 

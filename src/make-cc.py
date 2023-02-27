@@ -85,9 +85,9 @@ def write_envelope(dest_directory):
 
     hoja = workbook['Hoja1']
     hoja['D16'] = data["no_response"]
-    hoja['C26'] = data["evidence_table"]
-    hoja['D22'] = data["agency"]
     hoja['D18'] = data["ci"]
+    hoja['D22'] = data["agency"]
+    hoja['C26'] = data["evidence_table"]
 
     workbook.save(os.path.abspath(f"{dest_directory}/sobre.xlsx"))
     os.startfile(os.path.abspath(f"{dest_directory}/sobre.xlsx"))
