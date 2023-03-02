@@ -32,7 +32,7 @@ def generate_image_sequence(dest_directory, video_path, image_interval):
     time_elapsed = 0
     while success:
         if time_elapsed >= time_per_image:
-            image_name = f"{image_directory}/frame_{image_counter}.jpg"
+            image_name = f"{image_directory}/frame_{image_counter:010}.jpg"
             cv2.imwrite(image_name, frame)
             time_elapsed = 0
         success, frame = cap.read()
