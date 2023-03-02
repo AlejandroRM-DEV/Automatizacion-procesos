@@ -109,6 +109,3 @@ if __name__ == "__main__":
     dest_directory = os.path.dirname(args.file)
     write_chain_of_custody(dest_directory)
     write_envelope(dest_directory)
-
-    print("Presiona una tecla para terminar...")
-    input()

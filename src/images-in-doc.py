@@ -18,6 +18,7 @@ def make_document(dest_directory, files, columns):
 
     doc.render(datos)
     doc.save(os.path.abspath(f"{dest_directory}/imgs.docx"))
+    os.startfile(os.path.abspath(f"{dest_directory}/imgs.docx"))
 
 
 def search_files(dir):
@@ -46,6 +47,3 @@ if __name__ == "__main__":
 
         columns = input("Introduce el número de columnas (1, 2, 3 o 4): ")
         make_document(dest_directory, files, columns)
-
-    print("Presiona una tecla para terminar...")
-    input()
