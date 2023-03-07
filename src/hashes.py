@@ -30,7 +30,7 @@ def calculate_hash(file):
 def save_to_html(results, dest_directory):
     results.sort()
 
-    with open(os.path.join(dest_directory, 'Hashes.html'), 'w') as f:
+    with open(os.path.join(dest_directory, 'Hashes.html'), 'w', encoding='utf-8') as f:
         f.write('<html>\n')
         f.write('<head>\n')
         f.write('<title>Resultados de hash SHA256</title>\n')
