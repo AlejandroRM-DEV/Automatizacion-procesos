@@ -55,6 +55,10 @@ def post_process(data):
         data["type"] = "EXTRACCIÓN DE INFORMACIÓN DE DISPOSITIVOS DE ALMACENAMIENTO DIGITAL"
     elif parts[7] == "10":
         data["type"] = "EXTRACCIÓN DE INFORMACIÓN DE EQUIPOS DE GRABACIÓN DE VIDEO"
+    elif parts[7] == "11":
+        data["type"] = "ADQUISICIÓN DE INFORMACIÓN DE EQUIPOS DE CÓMPUTO"
+    elif parts[7] == "12":
+        data["type"] = "IDENTIFICACIÓN TÉCNICA DE VIDEOS Y SECUENCIA"
     else:
         data["type"] = ""
 
