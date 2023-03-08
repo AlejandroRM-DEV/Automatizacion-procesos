@@ -1,8 +1,10 @@
 import os
 import cv2
 import glob
+import json
 import argparse
 import concurrent.futures
+import subprocess
 from tqdm import tqdm
 
 EXTENSIONS = [".3g2", ".3gp", ".asf", ".avi", ".dav", ".divx", ".f4v", ".flv", ".h264", ".m2t", ".m2ts", ".m2v", ".mkv", ".m4v", ".mov", ".mp4",
@@ -42,8 +44,28 @@ def generate_image_sequence(dest_directory, video_path, image_interval):
     cap.release()
 
 
-def process_video(dest_directory, video_file, image_interval):
-    generate_image_sequence(dest_directory, video_file, image_interval)
+def save_video_metadata(dest_directory, video_file):
+    file_name = os.path.splitext(os.path.basename(video_file))[0]
+    metadata_file = os.path.join(dest_directory, f"Metadata_{file_name}.txt")
+
+    p = subprocess.Popen(
+        ["exiftool", "-j", video_file],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    json_output, err = p.communicate()
+    metadata = json.loads(json_output)[0]
+    metadata.pop("SourceFile", None)
+    metadata.pop("Directory", None)
+    with open(metadata_file, "w") as f:
+        f.write(json.dumps(metadata, indent=4))
+
+
+def process_video(dest_img_directory, dest_meta_directory, video_file, image_interval):
+    save_video_metadata(dest_meta_directory, video_file)
+    generate_image_sequence(dest_img_directory, video_file, image_interval)
 
 
 def search_files(current_dir):
@@ -65,14 +87,17 @@ if __name__ == "__main__":
     if len(video_files) == 0:
         print("No se encontraron archivos de video")
     else:
-        dest_directory = os.path.join(os.path.dirname(args.dir), "_AUTO-IMG-SEC_")
-        if not os.path.exists(dest_directory):
-            os.makedirs(dest_directory)
+        dest_img_directory = os.path.join(os.path.dirname(args.dir), "_AUTO-IMG-SEC_")
+        if not os.path.exists(dest_img_directory):
+            os.makedirs(dest_img_directory)
+        dest_meta_directory = os.path.join(os.path.dirname(args.dir), "_METADATA_")
+        if not os.path.exists(dest_meta_directory):
+            os.makedirs(dest_meta_directory)
 
         image_interval = float(
             input("Introduce cada cuántos segundos quieres una imagen: "))
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = [executor.submit(process_video, dest_directory, video_file, image_interval) for video_file in video_files]
+            results = [executor.submit(process_video, dest_img_directory, dest_meta_directory, video_file, image_interval) for video_file in video_files]
             for _ in tqdm(concurrent.futures.as_completed(results), total=len(results), desc="Procesando videos"):
                 pass
 
