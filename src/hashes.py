@@ -2,6 +2,7 @@ import os
 import hashlib
 import argparse
 from tqdm import tqdm
+import pyperclip
 
 
 def search_files(current_dir):
@@ -68,6 +69,7 @@ def save_to_html(results, dest_directory):
 
     hash_report = calculate_hash(os.path.join(dest_directory, 'Hashes.html'))
     print(f"Valor hash del reporte: {hash_report}")
+    pyperclip.copy(hash_report)
 
 
 if __name__ == "__main__":
