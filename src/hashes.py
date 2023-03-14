@@ -84,8 +84,7 @@ if __name__ == "__main__":
         print("No se encontraron archivos")
     else:
         dest_directory = os.path.join(os.path.dirname(args.dir), "_HASHES_")
-        if not os.path.exists(dest_directory):
-            os.makedirs(dest_directory)
+        os.makedirs(dest_directory, exist_ok=True)
 
         results = []
         for file in tqdm(files):

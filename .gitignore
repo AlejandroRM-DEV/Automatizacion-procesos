@@ -128,8 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-\[HASHES\]/
-\[AUTO-IMG-SEC\]/
-\[DOCS\]/
+_HASHES_/
+_AUTO-IMG-SEC_/
+_DOCS_/
+_METADATA_/
 src/protected/*
 src/sprotected/***
