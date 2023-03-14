@@ -13,8 +13,7 @@ def make_document(dest_directory, files, columns):
 
     datos = {"imgs": [], "columns": columns}
     for file in files:
-        datos["imgs"].append(InlineImage(
-            doc, image_descriptor=os.path.abspath(file), width=Cm(16/int(columns))))
+        datos["imgs"].append(InlineImage(doc, image_descriptor=os.path.abspath(file), width=Cm(16/int(columns))))
 
     doc.render(datos)
     doc.save(os.path.abspath(f"{dest_directory}/imgs.docx"))
