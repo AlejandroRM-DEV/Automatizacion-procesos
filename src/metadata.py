@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = [executor.submit(process, dest_meta_directory, file) for file in files]
-            for _ in tqdm(concurrent.futures.as_completed(results), total=len(results), desc="Procesando"):
+            for _ in tqdm(concurrent.futures.as_completed(results), total=len(results), desc="Obteniendo metadatos"):
                 pass
 
     print("Presiona una tecla para terminar...")
