@@ -2,7 +2,6 @@ import os
 import cv2
 import glob
 import argparse
-import concurrent.futures
 from tqdm import tqdm
 
 VIDEO_EXTENSIONS = [
@@ -71,10 +70,8 @@ if __name__ == "__main__":
         os.makedirs(dest_img_directory, exist_ok=True)
 
         image_interval = float(input("Introduce cada cuántos segundos quieres una imagen: "))
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = [executor.submit(process_video, dest_img_directory, video_file, image_interval) for video_file in video_files]
-            for _ in tqdm(concurrent.futures.as_completed(results), total=len(results), desc="Procesando videos"):
-                pass
+        for video_file in tqdm(video_files, desc="Procesando videos"):
+            process_video(dest_img_directory, video_file, image_interval)
 
     print("Presiona una tecla para terminar...")
     input()
