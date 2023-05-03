@@ -2,6 +2,7 @@ import os
 import cv2
 import glob
 import argparse
+import subprocess
 from tqdm import tqdm
 
 VIDEO_EXTENSIONS = [
@@ -12,35 +13,23 @@ VIDEO_EXTENSIONS = [
 
 
 def generate_image_sequence(dest_directory, video_path, image_interval):
-    cap = cv2.VideoCapture(video_path)
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
-
-    image_counter = 0
-    success, frame = cap.read()
-
     video_file_name = os.path.splitext(os.path.basename(video_path))[0]
     image_directory = os.path.join(dest_directory, video_file_name)
     os.makedirs(image_directory, exist_ok=True)
 
-    if image_interval >= 1:
-        time_per_image = image_interval
-    elif image_interval > 0:
-        images_per_second = 1 / image_interval
-        time_per_image = 1 / images_per_second
-    else:
-        raise ValueError("El intervalo de tiempo debe ser mayor que 0")
+    command = [
+        "ffmpeg",
+        "-hide_banner",
+        "-i", video_path,
+        "-r", str(1 / image_interval),
+        "-f", "image2",
+        "-vf", "fps=fps=1/{}".format(image_interval),
+        "-loglevel", "panic",
+        "{}/{}-%05d.jpg".format(image_directory, video_file_name),
+    ]
 
-    time_elapsed = 0
-    while success:
-        if time_elapsed >= time_per_image:
-            image_name = f"{image_directory}/frame_{image_counter:010}.jpg"
-            cv2.imwrite(image_name, frame)
-            time_elapsed = 0
-        success, frame = cap.read()
-        image_counter += 1
-        time_elapsed += 1 / fps
-
-    cap.release()
+    process = subprocess.Popen(command, universal_newlines=True, encoding='utf-8')
+    process.wait()
 
 
 def process_video(dest_img_directory, video_file, image_interval):
@@ -50,14 +39,16 @@ def process_video(dest_img_directory, video_file, image_interval):
 def search_video_files(current_dir):
     video_files = []
     for extension in VIDEO_EXTENSIONS:
-        video_files.extend(glob.glob(f"{current_dir}/**/*{extension}", recursive=True))
+        video_files.extend(
+            glob.glob(f"{current_dir}/**/*{extension}", recursive=True))
 
     return video_files
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--dir", help="Directorio donde buscar los archivos de video", default=".")
+    parser.add_argument(
+        "-d", "--dir", help="Directorio donde buscar los archivos de video", default=".")
     args = parser.parse_args()
 
     print(f"Buscando archivos de video en: {args.dir}")
@@ -66,10 +57,12 @@ if __name__ == "__main__":
     if len(video_files) == 0:
         print("No se encontraron archivos de video")
     else:
-        dest_img_directory = os.path.join(os.path.dirname(args.dir), "_AUTO-IMG-SEC_")
+        dest_img_directory = os.path.join(
+            os.path.dirname(args.dir), "_AUTO-IMG-SEC_")
         os.makedirs(dest_img_directory, exist_ok=True)
 
-        image_interval = float(input("Introduce cada cuántos segundos quieres una imagen: "))
+        image_interval = float(
+            input("Introduce cada cuántos segundos quieres una imagen: "))
         for video_file in tqdm(video_files, desc="Procesando videos"):
             process_video(dest_img_directory, video_file, image_interval)
 
