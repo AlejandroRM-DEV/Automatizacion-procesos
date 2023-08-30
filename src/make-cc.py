@@ -51,6 +51,8 @@ def post_process(data):
 
     if parts[7] == "01":
         data["type"] = "ADQUISICIÓN DE DATOS DE TELÉFONO CELULAR (DISPOSITIVOS MOVILES)"
+    elif parts[7] == "05":
+        data["type"] = "INVESTIGACIÓN SOBRE SERVICIOS Y APLICACIONES DE INTERNET"
     elif parts[7] == "07":
         data["type"] = "EXTRACCIÓN DE INFORMACIÓN DE DISPOSITIVOS DE ALMACENAMIENTO DIGITAL"
     elif parts[7] == "10":
