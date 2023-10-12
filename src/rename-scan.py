@@ -17,11 +17,23 @@ def search_files(current_dir):
     return pdf_files
 
 
+def sanitize(str):
+    str = str.replace('/', '-')
+    str = str.replace(' ', '')
+
+    parts = str.split("-")
+    parts[1] = parts[1].replace('1', 'I')
+    parts[4] = "IJCF"
+    parts[7] = "IF"
+
+    return "-".join(parts)
+
+
 def process(file):
     images = convert_from_path(file,poppler_path=r'C:\Program Files\poppler-23.08.0\Library\bin')
 
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-    pattern = r'D-(X{0,3}(I{0,3}|IV|IX|V?I{0,3})|[IVX]{1,2})\s*/\s*\d{1,6}\s*/\s*\d{4}\s*/\s*IJCF\s*/\s*0*\d{6}\s*/\s*\d{4}\s*/\s*IF\s*/\s*0*\d{2}'
+    pattern = r'D-[\w]{1,3}\s*/\s*\d{1,6}\s*/\s*\d{4}\s*/\s*[\w]{4}\s*/\s*0*\d{6}\s*/\s*\d{4}\s*/\s*[\w]{2}\s*/\s*0*\d{2}'
     found_match = None
     for image in images:
         text = pytesseract.image_to_string(image, lang='spa')
@@ -34,7 +46,7 @@ def process(file):
     
     if found_match:
         pdf_directory = os.path.dirname(file)
-        new_filename = os.path.join(pdf_directory, found_match.replace('/', '-').replace(' ', '') + '.pdf')
+        new_filename = os.path.join(pdf_directory, sanitize(found_match) + '.pdf')
         os.rename(file, new_filename)
 
 
