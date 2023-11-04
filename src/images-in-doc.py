@@ -43,7 +43,7 @@ if __name__ == "__main__":
     if len(files) == 0:
         print("No se encontraron archivos")
     else:
-        dest_directory = os.path.join(os.path.dirname(args.dir), "_DOCS_")
+        dest_directory = os.path.join(os.path.dirname(args.dir), "_IJCF_AUTO_DOCS")
         if not os.path.exists(dest_directory):
             os.makedirs(dest_directory)
 

@@ -58,7 +58,7 @@ if __name__ == "__main__":
         print("No se encontraron archivos de video")
     else:
         dest_img_directory = os.path.join(
-            os.path.dirname(args.dir), "_AUTO-IMG-SEC_")
+            os.path.dirname(args.dir), "_IJCF_SEC_IMAGENES")
         os.makedirs(dest_img_directory, exist_ok=True)
 
         image_interval = float(
