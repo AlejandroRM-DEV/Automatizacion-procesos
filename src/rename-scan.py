@@ -30,24 +30,30 @@ def sanitize(str):
 
 
 def process(file):
-    images = convert_from_path(file,poppler_path=r'C:\Program Files\poppler-23.08.0\Library\bin')
-
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    print(file)
+
+    rotations = [0, 90, 180, 270]
+    images = convert_from_path(file,poppler_path=r'C:\Program Files\poppler-23.08.0\Library\bin')
     pattern = r'D-[\w]{1,3}\s*/\s*\d{1,6}\s*/\s*\d{4}\s*/\s*[\w]{4,}\s*/\s*0*\d{6}\s*/\s*\d{4}\s*/\s*[\w]{2}\s*/\s*0*\d{2}'
     found_match = None
-    for image in images:
-        text = pytesseract.image_to_string(image, lang='spa')
-        print(text)
-        match = re.search(pattern, text)
+    for degrees in rotations:
+        for image in images:
+            text = pytesseract.image_to_string(image.rotate(degrees), lang='spa')
+            match = re.search(pattern, text)
+            
+            if match:
+                found_match = match.group()
+                break
         
-        if match:
-            found_match = match.group()
+        if found_match:
+            pdf_directory = os.path.dirname(file)
+            new_filename = os.path.join(pdf_directory, sanitize(found_match) + '.pdf')
+            try:
+                os.rename(file, new_filename)
+            except FileExistsError as e:
+                print(e)
             break
-    
-    if found_match:
-        pdf_directory = os.path.dirname(file)
-        new_filename = os.path.join(pdf_directory, sanitize(found_match) + '.pdf')
-        os.rename(file, new_filename)
 
 
 if __name__ == "__main__":
@@ -61,6 +67,7 @@ if __name__ == "__main__":
     if len(files) == 0:
         print("No se encontraron archivos")
     else:
+        file = files.reverse()
         for file in tqdm(files):
             process(file)
 

@@ -42,7 +42,7 @@ if __name__ == "__main__":
     if len(files) == 0:
         print("No se encontraron archivos")
     else:
-        dest_meta_directory = os.path.join(os.path.dirname(args.dir), "_METADATA_")
+        dest_meta_directory = os.path.join(os.path.dirname(args.dir), "_IJCF_METADATOS")
         os.makedirs(dest_meta_directory, exist_ok=True)
 
         with concurrent.futures.ThreadPoolExecutor() as executor:

@@ -25,7 +25,7 @@ def generate_image_sequence(dest_directory, video_path, image_interval):
         "-f", "image2",
         "-vf", "fps=fps=1/{}".format(image_interval),
         "-loglevel", "panic",
-        "{}/{}-%05d.png".format(image_directory, video_file_name),
+        "{}/{}-%05d.jpg".format(image_directory, video_file_name),
     ]
 
     process = subprocess.Popen(command, universal_newlines=True, encoding='utf-8')
