@@ -1,5 +1,4 @@
 import os
-import cv2
 import glob
 import argparse
 import subprocess
